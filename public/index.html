@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Alice&family=Nunito:ital,wght@0,400..800;1,400..700&family=JetBrains+Mono:ital,wght@0,400..600;1,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400..800;1,400..700&family=JetBrains+Mono:ital,wght@0,400..600;1,400&display=swap"
     />
     <script>
       // Spica dark mode is opt-in via data-theme; follow the system preference.
@@ -36,34 +36,21 @@
         --primary-deep: oklch(0.61 0.235 6.5);
         --primary-cta-deep: oklch(0.645 0.24 5.5);
         --harmony-left: oklch(0.8334 0.079 247.14);
-        --harmony-center: oklch(0.8671 0.0568 273.01);
-        --harmony-center-deep: oklch(0.5554 0.1575 274.68);
-        --bloom: oklch(0.8549 0.0928 350.16);
         --ink: oklch(0.2772 0.019 303.36);
         --ink-soft: oklch(0.4575 0.0228 295.31);
         --ink-muted: oklch(0.6834 0.0241 302.75);
+        /* Neutral backgrounds (instead of Spica's tinted washes) */
+        --page: oklch(0.985 0 0);
         --base: #fff;
-        --surface: oklch(0.983 0.0025 333.98);
-        --surface-2: oklch(0.9604 0.0085 325.64);
-        --border: oklch(0.9447 0.0108 339.34);
-        --border-strong: oklch(0.9022 0.0152 338.94);
+        --surface: oklch(0.97 0 0);
+        --surface-2: oklch(0.94 0 0);
+        --border: oklch(0.92 0 0);
+        --border-strong: oklch(0.87 0 0);
         --warning: oklch(0.8521 0.1164 82.04);
         --warning-soft: oklch(0.9487 0.0521 87.36);
         --warning-deep: oklch(0.4852 0.1161 73.97);
         --gold: #be9a4e;
-        --surface-wash:
-          radial-gradient(58% 50% at 2% 0%, rgba(255, 116, 156, 0.12) 0%, rgba(255, 116, 156, 0) 68%),
-          radial-gradient(52% 46% at 100% 6%, rgba(168, 205, 240, 0.16) 0%, rgba(168, 205, 240, 0) 70%),
-          radial-gradient(60% 55% at 94% 100%, rgba(207, 180, 232, 0.15) 0%, rgba(207, 180, 232, 0) 70%),
-          radial-gradient(50% 46% at 4% 96%, rgba(201, 210, 242, 0.14) 0%, rgba(201, 210, 242, 0) 70%),
-          var(--base);
-        --surface-wash-iris:
-          radial-gradient(60% 54% at 98% 2%, rgba(207, 180, 232, 0.22) 0%, rgba(207, 180, 232, 0) 68%),
-          radial-gradient(56% 50% at 2% 98%, rgba(222, 194, 236, 0.18) 0%, rgba(222, 194, 236, 0) 70%),
-          radial-gradient(50% 46% at 88% 96%, rgba(255, 116, 156, 0.1) 0%, rgba(255, 116, 156, 0) 72%),
-          var(--base);
 
-        --display: "Alice", "Iowan Old Style", Georgia, serif;
         --body: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
         --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
@@ -106,33 +93,18 @@
         --primary-soft: oklch(0.29 0.045 350);
         --primary-line: oklch(0.4 0.085 350);
         --primary-deep: oklch(0.8 0.13 355);
-        --harmony-center-deep: oklch(0.8671 0.0568 273.01);
         --ink: oklch(0.94 0.012 285);
         --ink-soft: oklch(0.8 0.022 278);
         --ink-muted: oklch(0.7 0.025 278);
-        --base: oklch(0.21 0.024 285);
-        --surface: oklch(0.25 0.028 295);
-        --surface-2: oklch(0.295 0.03 300);
-        --border: oklch(0.33 0.028 300);
-        --border-strong: oklch(0.4 0.032 300);
+        --page: oklch(0.16 0 0);
+        --base: oklch(0.18 0 0);
+        --surface: oklch(0.21 0 0);
+        --surface-2: oklch(0.26 0 0);
+        --border: oklch(0.29 0 0);
+        --border-strong: oklch(0.36 0 0);
         --warning-soft: oklch(0.29 0.035 82);
         --warning-deep: oklch(0.8521 0.1164 82.04);
-        --shadow-xs: 0 1px 2px rgba(12, 9, 16, 0.2);
-        --wash-pink: oklch(0.46 0.11 350);
-        --wash-blue: oklch(0.46 0.11 248);
-        --wash-periwinkle: oklch(0.46 0.11 274);
-        --wash-lavender: oklch(0.46 0.11 308);
-        --surface-wash:
-          radial-gradient(72.5% 62.5% at 2% 0%, color-mix(in oklab, var(--wash-pink) 20%, transparent), transparent 100%),
-          radial-gradient(65% 57.5% at 100% 6%, color-mix(in oklab, var(--wash-blue) 24%, transparent), transparent 100%),
-          radial-gradient(75% 68.75% at 94% 100%, color-mix(in oklab, var(--wash-lavender) 26%, transparent), transparent 100%),
-          radial-gradient(62.5% 57.5% at 4% 96%, color-mix(in oklab, var(--wash-periwinkle) 21%, transparent), transparent 100%),
-          var(--base);
-        --surface-wash-iris:
-          radial-gradient(75% 67.5% at 98% 2%, color-mix(in oklab, var(--wash-lavender) 28%, transparent), transparent 100%),
-          radial-gradient(70% 62.5% at 2% 98%, color-mix(in oklab, var(--wash-lavender) 24%, transparent), transparent 100%),
-          radial-gradient(62.5% 57.5% at 88% 96%, color-mix(in oklab, var(--wash-pink) 14%, transparent), transparent 100%),
-          var(--base);
+        --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
 
         --shj-fg: #edeafb;
         --shj-kwd: #cfb4e8;
@@ -150,14 +122,9 @@
       * {
         box-sizing: border-box;
       }
-      html {
-        background: var(--base);
-      }
       body {
         margin: 0;
-        min-height: 100vh;
-        background: var(--surface-wash);
-        background-attachment: fixed;
+        background: var(--page);
         color: var(--ink);
         font: 16px/1.6 var(--body);
       }
@@ -221,54 +188,6 @@
       }
 
       /* Hero */
-      header {
-        position: relative;
-      }
-      .sky {
-        position: absolute;
-        top: -36px;
-        right: -8px;
-        width: 220px;
-        height: auto;
-        pointer-events: none;
-      }
-      .sky .line {
-        stroke: var(--harmony-center-deep);
-        stroke-opacity: 0.35;
-        stroke-width: 1;
-        stroke-dasharray: 3 4;
-        fill: none;
-      }
-      .sky .arc {
-        stroke: var(--harmony-center-deep);
-        stroke-opacity: 0.16;
-        fill: none;
-      }
-      .sky .star {
-        fill: var(--harmony-center-deep);
-        fill-opacity: 0.55;
-      }
-      .sky .spica {
-        fill: var(--primary);
-        transform-box: fill-box;
-        transform-origin: center;
-        animation: spica-twinkle 3.2s var(--ease-out) infinite;
-      }
-      .sky .halo {
-        fill: var(--bloom);
-        fill-opacity: 0.35;
-      }
-      @keyframes spica-twinkle {
-        0%,
-        100% {
-          opacity: 0.6;
-          transform: scale(0.85);
-        }
-        50% {
-          opacity: 1;
-          transform: scale(1.1);
-        }
-      }
       .eyebrow {
         display: block;
         margin-bottom: 6px;
@@ -279,19 +198,19 @@
       h1,
       h2,
       h3 {
-        font-family: var(--display);
-        font-weight: 400;
-        letter-spacing: -0.012em;
+        font-family: var(--body);
+        font-weight: 700;
+        letter-spacing: -0.015em;
         color: var(--ink);
       }
       h1 {
-        position: relative;
         margin: 0 0 12px;
-        font-size: clamp(40px, 8vw, 56px);
-        line-height: 1.05;
+        font-size: clamp(38px, 7.5vw, 52px);
+        font-weight: 800;
+        line-height: 1.08;
+        letter-spacing: -0.025em;
       }
       .lead {
-        position: relative;
         max-width: 560px;
         margin: 0;
         font-size: 20px;
@@ -354,13 +273,13 @@
       }
       h2 {
         margin: 0 0 12px;
-        font-size: 32px;
+        font-size: 30px;
         line-height: 1.2;
       }
       h3 {
         margin: 0 0 10px;
-        font-size: 24px;
-        line-height: 1.25;
+        font-size: 21px;
+        line-height: 1.3;
       }
       p {
         margin: 0 0 12px;
@@ -385,7 +304,7 @@
         font-size: 0.8em;
       }
 
-      /* Code block: outer frame + inner iris-wash surface */
+      /* Code block: outer frame + inner code surface */
       .code {
         margin: 16px 0;
         padding: 6px;
@@ -419,7 +338,7 @@
         margin: 0;
         padding: 14px 16px;
         overflow-x: auto;
-        background: var(--surface-wash-iris);
+        background: var(--base);
         border: 1px solid var(--border);
         border-radius: var(--radius-card);
         color: var(--shj-fg);
@@ -449,11 +368,6 @@
         main {
           padding-top: 48px;
         }
-        .sky {
-          width: 150px;
-          top: -28px;
-          opacity: 0.7;
-        }
       }
       @media (prefers-reduced-motion: reduce) {
         * {
@@ -474,19 +388,6 @@
 
     <main>
       <header>
-        <svg class="sky" viewBox="0 0 220 160" aria-hidden="true">
-          <path class="arc" d="M10 150 A150 150 0 0 1 210 30" />
-          <path class="arc" d="M40 158 A120 120 0 0 1 212 70" />
-          <polyline class="line" points="24,40 70,58 112,46 150,82 196,64" />
-          <polyline class="line" points="112,46 104,104 150,82" />
-          <circle class="star" cx="24" cy="40" r="2" />
-          <circle class="star" cx="70" cy="58" r="2.5" />
-          <circle class="star" cx="112" cy="46" r="2" />
-          <circle class="star" cx="196" cy="64" r="2" />
-          <circle class="star" cx="104" cy="104" r="2" />
-          <circle class="halo" cx="150" cy="82" r="14" />
-          <path class="spica" d="M150 70c1.2 9 1.2 9 12 12-10.8 3-10.8 3-12 12-1.2-9-1.2-9-12-12 10.8-3 10.8-3 12-12Z" />
-        </svg>
         <span class="eyebrow">Standard Servers</span>
         <h1>One middleware, every framework</h1>
         <p class="lead">
@@ -525,11 +426,10 @@ app.use(async (c, next) => {
   await next();
 });
 
-// SvelteKit
-export const handle = ({ event, resolve }) => {
-  console.log(event.request.method, event.url.pathname);
-  return resolve(event);
-};</code></pre>
+// Elysia
+app.onRequest(({ request }) => {
+  console.log(request.method, new URL(request.url).pathname);
+});</code></pre>
         </figure>
         <p>
           Same logger, written three times. Now multiply that by every library
