@@ -570,19 +570,22 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
 };</code></pre>
           </figure>
           <p>
-            Elysia can add it to every request with <code>derive</code>. Its
-            response headers are a plain object and the body is the handler's
-            return value, so <code>headers</code> and <code>body</code> would
-            need support inside Elysia itself:
+            Elysia can add it with <code>derive</code>, which runs per request
+            after validation. Its response headers are a plain object and the
+            body is the handler's return value, so <code>headers</code> and
+            <code>body</code> would need support inside Elysia itself:
           </p>
           <figure class="code">
             <figcaption><span class="file">elysia</span><span class="lang">ts</span></figcaption>
-            <pre><code data-lang="ts">app.derive(({ request, set }) => ({
+            <pre><code data-lang="ts">import { StatusMap } from "elysia";
+
+app.derive(({ request, set }) => ({
   "~standard": {
     vendor: "elysia",
     req: request,
     res: {
-      get status() { return typeof set.status === "number" ? set.status : undefined; },
+      // set.status can be a number or a name, like "Created"
+      get status() { return typeof set.status === "string" ? StatusMap[set.status] : set.status; },
       set status(s) { set.status = s; },
     },
   },
@@ -617,8 +620,6 @@ app.use(logger, addVendorHeader);</code></pre>
         <span>Draft proposal</span>
         <span aria-hidden="true">·</span>
         <a href="https://github.com/standard-servers">github.com/standard-servers</a>
-        <span aria-hidden="true">·</span>
-        <span>Highlighting by <a href="https://github.com/pi0/rangi">rangi</a></span>
       </footer>
     </main>
 
