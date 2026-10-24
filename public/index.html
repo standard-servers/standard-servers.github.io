@@ -382,7 +382,7 @@
       <span class="badge">Draft proposal</span>
       <span>
         Nothing here's final yet. Names, types and APIs may still change.
-        <a href="https://github.com/standard-servers/standard-context/issues">Tell us what you think</a>
+        <a href="https://github.com/standard-servers/proposals/issues">Tell us what you think</a>
       </span>
     </div>
 
@@ -395,11 +395,11 @@
           Fetch-based framework.
         </p>
         <div class="actions">
-          <a class="button primary" href="https://github.com/standard-servers/standard-context">
+          <a class="button primary" href="https://github.com/standard-servers/proposals/tree/main/packages/standard-context">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg>
             standard-context
           </a>
-          <a class="button secondary" href="https://github.com/standard-servers/standard-middleware">
+          <a class="button secondary" href="https://github.com/standard-servers/proposals/tree/main/packages/standard-middleware">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg>
             standard-middleware
           </a>
@@ -461,30 +461,83 @@ app.onRequest(({ request }) => {
         </p>
         <figure class="code">
           <figcaption><span class="file">standard-context</span><span class="lang">ts</span></figcaption>
-          <pre><code data-lang="ts">export type StandardContext&lt;C = {}, R = unknown, W = unknown&gt; = C &amp; {
-  readonly "~standard": StandardContext.Props&lt;R, W&gt;;
+          <!-- types: standard-context -->
+          <pre><code data-lang="ts">/**
+ * The Standard Context type.
+ *
+ * @template C Type of the framework defined `context` or `event`.
+ * @template R Type of the JavaScript runtime.
+ * @template W Return type of `waitUntil`.
+ */
+export type StandardContext&lt;C = {}, R = unknown, W = unknown&gt; = C &amp; {
+	/** The Standard Context properties. */
+	readonly "~standard": StandardContext.Props&lt;R, W&gt;;
 };
 
 export declare namespace StandardContext {
-  export interface Props&lt;R = unknown, W = unknown&gt; {
-    /** Name of the server framework */
-    readonly vendor: string;
-    /** Incoming web Request */
-    readonly req: Request;
-    /** Prepared response modifiers */
-    readonly res: PreparedResponse;
-    /** Runtime specific data, e.g. { node: { req, res } } */
-    readonly runtime?: R;
-    /** Wait until a promise has resolved */
-    readonly waitUntil?: (promise: Promise&lt;any&gt;) =&gt; W;
-  }
+	/**
+	 * The Standard Context properties interface.
+	 *
+	 * @template R Type of the JavaScript runtime.
+	 * @template W Return type of `waitUntil`.
+	 */
+	export interface Props&lt;R = unknown, W = unknown&gt; {
+		/** The name of the server framework. */
+		readonly framework: string;
+		/** Incoming web `Request`. */
+		readonly req: Request;
+		/**
+		 * Prepared response.
+		 *
+		 * Its fields are not guaranteed to be writable. Assign a new object to replace it.
+		 */
+		res: PreparedResponse;
+		/**
+		 * JavaScript runtime specific data.
+		 *
+		 * @example
+		 *
+		 * ```ts
+		 * type Runtime = { node?: { req: IncomingMessage; res: ServerResponse } };
+		 * ```
+		 */
+		readonly runtime?: R;
+		/**
+		 * Wait until a promise has resolved.
+		 *
+		 * @param promise Promise to resolve before exit.
+		 */
+		readonly waitUntil?: (promise: Promise&lt;any&gt;) =&gt; W;
+	}
 
-  export interface PreparedResponse {
-    body?: BodyInit | null;
-    status?: number;
-    headers?: Headers;
-  }
+	/**
+	 * The Prepared Response properties interface.
+	 *
+	 * Fields are readonly so that a standard `Response` (whose properties are readonly) is a valid value.
+	 *
+	 * Frameworks may optionally provide a mutable object, but portable code should not rely on it.
+	 */
+	export interface PreparedResponse {
+		/** `Response` body. */
+		readonly body?: BodyInit | null;
+		/** `Response` status code. */
+		readonly status?: number;
+		/** `Response` headers. */
+		readonly headers?: Headers;
+	}
 }</code></pre>
+          <!-- /types -->
+        </figure>
+        <p>
+          <code>res</code> describes the final response. Its fields are
+          readonly, so a standard <code>Response</code> is a valid value. To
+          change the response, assign a new object to <code>res</code>. The
+          <code>headers</code> object can still be changed in place:
+        </p>
+        <figure class="code">
+          <figcaption><span class="file">not-found.ts</span><span class="lang">ts</span></figcaption>
+          <pre><code data-lang="ts">const std = c["~standard"];
+std.res = { status: 404, body: "Not Found", headers: std.res.headers };</code></pre>
         </figure>
       </section>
 
@@ -500,15 +553,37 @@ export declare namespace StandardContext {
         </p>
         <figure class="code">
           <figcaption><span class="file">standard-middleware</span><span class="lang">ts</span></figcaption>
-          <pre><code data-lang="ts">export type StandardNext&lt;Args extends unknown[] = [], T = unknown&gt; = (
-  ...args: Args
-) =&gt; Promise&lt;T&gt;;
+          <!-- types: standard-middleware -->
+          <pre><code data-lang="ts">import type { StandardContext } from "standard-context";
 
+/**
+ * The Standard Next type.
+ *
+ * Any async function that runs the next middleware in the stack.
+ *
+ * @template Args Type of the optional arguments.
+ * @template R Type of the resolved value.
+ * @param args Optional arguments passed into `next`.
+ * @returns Promise that resolves when the next middleware has executed.
+ */
+export type StandardNext&lt;Args extends unknown[] = [], T = unknown&gt; = (...args: Args) =&gt; Promise&lt;T&gt;;
+
+/**
+ * The Standard Middleware type.
+ *
+ * @template C Type of the context.
+ * @template N Type of the `next` function.
+ * @template R Type of the resolved value.
+ * @param context Context of the current request.
+ * @param next `next` function that calls the next middleware.
+ * @returns Resolved value.
+ */
 export type StandardMiddleware&lt;
-  C extends StandardContext = StandardContext,
-  N extends StandardNext = StandardNext,
-  R = void,
+	C extends StandardContext = StandardContext,
+	N extends StandardNext = StandardNext,
+	R = void,
 &gt; = (context: C, next: N) =&gt; Promise&lt;R&gt;;</code></pre>
+          <!-- /types -->
         </figure>
       </section>
 
@@ -529,8 +604,8 @@ export const logger: StandardMiddleware = async (c, next) =&gt; {
   console.log(res.status ?? 200, req.method, req.url);
 };
 
-export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
-  c["~standard"].res.headers?.set("x-vendor", c["~standard"].vendor);
+export const addFrameworkHeader: StandardMiddleware = async (c, next) =&gt; {
+  c["~standard"].res.headers?.set("x-framework", c["~standard"].framework);
   await next();
 };</code></pre>
           </figure>
@@ -543,7 +618,7 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
           <figure class="code">
             <figcaption><span class="file">h3</span><span class="lang">ts</span></figcaption>
             <pre><code data-lang="ts">event["~standard"] = {
-  vendor: "h3",
+  framework: "h3",
   req: event.req,
   res: event.res,
   waitUntil: event.waitUntil,
@@ -551,22 +626,17 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
           </figure>
           <p>
             Other frameworks can bridge their own APIs with getters and setters.
-            In Hono, <code>c.res</code> is a read-only <code>Response</code> that's
-            replaced once the handler returns, so each property reads and writes
-            the current one:
+            In Hono, <code>c.res</code> is a standard <code>Response</code> that's
+            replaced once the handler returns, so <code>res</code> reads and
+            replaces the current one:
           </p>
           <figure class="code">
             <figcaption><span class="file">hono</span><span class="lang">ts</span></figcaption>
             <pre><code data-lang="ts">c["~standard"] = {
-  vendor: "hono",
+  framework: "hono",
   req: c.req.raw,
-  res: {
-    get body() { return c.res.body; },
-    set body(b) { c.res = new Response(b, c.res); },
-    get status() { return c.res.status; },
-    set status(s) { c.res = new Response(c.res.body, { status: s, headers: c.res.headers }); },
-    get headers() { return c.res.headers; },
-  },
+  get res() { return c.res; },
+  set res(r) { c.res = new Response(r.body, r); },
 };</code></pre>
           </figure>
           <p>
@@ -581,13 +651,11 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
 
 app.derive(({ request, set }) => ({
   "~standard": {
-    vendor: "elysia",
+    framework: "elysia",
     req: request,
-    res: {
-      // set.status can be a number or a name, like "Created"
-      get status() { return typeof set.status === "string" ? StatusMap[set.status] : set.status; },
-      set status(s) { set.status = s; },
-    },
+    // set.status can be a number or a name, like "Created"
+    get res() { return { status: typeof set.status === "string" ? StatusMap[set.status] : set.status }; },
+    set res(r) { set.status = r.status; },
   },
 }));</code></pre>
           </figure>
@@ -598,9 +666,9 @@ app.derive(({ request, set }) => ({
           <h3>Use it in any framework</h3>
           <figure class="code">
             <figcaption><span class="file">app.ts</span><span class="lang">ts</span></figcaption>
-            <pre><code data-lang="ts">import { logger, addVendorHeader } from "some-standard-library";
+            <pre><code data-lang="ts">import { logger, addFrameworkHeader } from "some-standard-library";
 
-app.use(logger, addVendorHeader);</code></pre>
+app.use(logger, addFrameworkHeader);</code></pre>
           </figure>
         </div>
       </section>
@@ -610,7 +678,7 @@ app.use(logger, addVendorHeader);</code></pre>
         <p>
           This is a starting point for a conversation between framework and
           library authors. Read the proposals, try the
-          <a href="https://github.com/standard-servers/standard-middleware/tree/main/src/example">examples</a>
+          <a href="https://github.com/standard-servers/proposals/tree/main/packages/standard-middleware/src/example">examples</a>
           for H3, Hono and Remix, and tell us what you think.
         </p>
       </section>

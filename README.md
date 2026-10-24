@@ -1,6 +1,6 @@
 # website
 
-Website for the [standard-context](https://github.com/standard-servers/standard-context) and [standard-middleware](https://github.com/standard-servers/standard-middleware) proposals.
+Website for the [standard-servers proposals](https://github.com/standard-servers/proposals) ([standard-context](https://github.com/standard-servers/proposals/tree/main/packages/standard-context) and [standard-middleware](https://github.com/standard-servers/proposals/tree/main/packages/standard-middleware)).
 
 > [!NOTE]
 > This is an early proposal to share the idea. Nothing here is final.
@@ -13,6 +13,15 @@ Serve the `public` directory with any static server:
 
 ```sh
 npx serve public
+```
+
+### Sync types
+
+The proposal types on the page are copied from upstream `packages/*/src/index.ts` into the `<!-- types: <package> -->` sections of `public/index.html`. Don't edit them by hand, run:
+
+```sh
+node scripts/sync-types.ts               # from GitHub (main)
+node scripts/sync-types.ts ../proposals  # from a local checkout
 ```
 
 ## Deployment
