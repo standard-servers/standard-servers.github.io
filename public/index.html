@@ -637,6 +637,8 @@ export const addFrameworkHeader: StandardMiddleware = async (c, next) =&gt; {
   req: c.req.raw,
   get res() { return c.res; },
   set res(r) { c.res = new Response(r.body, r); },
+  // c.executionCtx throws outside Workers, so read it lazily
+  waitUntil: (promise) =&gt; c.executionCtx.waitUntil(promise),
 };</code></pre>
           </figure>
           <p>
@@ -656,6 +658,8 @@ app.derive(({ request, set }) => ({
     // set.status can be a number or a name, like "Created"
     get res() { return { status: typeof set.status === "string" ? StatusMap[set.status] : set.status }; },
     set res(r) { set.status = r.status; },
+    // Bun's server is long-lived, so nothing needs to be held open
+    waitUntil: (promise) =&gt; { promise.catch(console.error); },
   },
 }));</code></pre>
           </figure>
