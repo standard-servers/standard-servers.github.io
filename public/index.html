@@ -10,180 +10,513 @@
     />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>~</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-10 -10 20 20'><path fill='%23F9578A' d='M0-9C1-1 1-1 9 0 1 1 1 1 0 9-1 1-1 1-9 0-1-1-1-1 0-9Z'/></svg>"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Alice&family=Nunito:ital,wght@0,400..800;1,400..700&family=JetBrains+Mono:ital,wght@0,400..600;1,400&display=swap"
+    />
+    <script>
+      // Spica dark mode is opt-in via data-theme; follow the system preference.
+      const dark = matchMedia("(prefers-color-scheme: dark)");
+      const applyTheme = () => (document.documentElement.dataset.theme = dark.matches ? "dark" : "light");
+      applyTheme();
+      dark.addEventListener("change", applyTheme);
+    </script>
     <style>
+      /* Spica tokens (subset of the Spica design system) */
       :root {
-        color-scheme: light dark;
-        --bg: #fdfdfc;
-        --fg: #1b1b1f;
-        --muted: #62626b;
-        --border: #e4e4e7;
-        --code-bg: #f6f6f7;
-        --accent: #2f6fde;
-        --banner-bg: #fff4d6;
-        --banner-fg: #5c4300;
-        --banner-border: #f0d68a;
+        color-scheme: light;
+        --primary: oklch(0.686 0.246 4.2);
+        --on-primary: #fff;
+        --primary-soft: oklch(0.968 0.02 355);
+        --primary-line: oklch(0.905 0.05 353);
+        --primary-deep: oklch(0.61 0.235 6.5);
+        --primary-cta-deep: oklch(0.645 0.24 5.5);
+        --harmony-left: oklch(0.8334 0.079 247.14);
+        --harmony-center: oklch(0.8671 0.0568 273.01);
+        --harmony-center-deep: oklch(0.5554 0.1575 274.68);
+        --bloom: oklch(0.8549 0.0928 350.16);
+        --ink: oklch(0.2772 0.019 303.36);
+        --ink-soft: oklch(0.4575 0.0228 295.31);
+        --ink-muted: oklch(0.6834 0.0241 302.75);
+        --base: #fff;
+        --surface: oklch(0.983 0.0025 333.98);
+        --surface-2: oklch(0.9604 0.0085 325.64);
+        --border: oklch(0.9447 0.0108 339.34);
+        --border-strong: oklch(0.9022 0.0152 338.94);
+        --warning: oklch(0.8521 0.1164 82.04);
+        --warning-soft: oklch(0.9487 0.0521 87.36);
+        --warning-deep: oklch(0.4852 0.1161 73.97);
+        --gold: #be9a4e;
+        --surface-wash:
+          radial-gradient(58% 50% at 2% 0%, rgba(255, 116, 156, 0.12) 0%, rgba(255, 116, 156, 0) 68%),
+          radial-gradient(52% 46% at 100% 6%, rgba(168, 205, 240, 0.16) 0%, rgba(168, 205, 240, 0) 70%),
+          radial-gradient(60% 55% at 94% 100%, rgba(207, 180, 232, 0.15) 0%, rgba(207, 180, 232, 0) 70%),
+          radial-gradient(50% 46% at 4% 96%, rgba(201, 210, 242, 0.14) 0%, rgba(201, 210, 242, 0) 70%),
+          var(--base);
+        --surface-wash-iris:
+          radial-gradient(60% 54% at 98% 2%, rgba(207, 180, 232, 0.22) 0%, rgba(207, 180, 232, 0) 68%),
+          radial-gradient(56% 50% at 2% 98%, rgba(222, 194, 236, 0.18) 0%, rgba(222, 194, 236, 0) 70%),
+          radial-gradient(50% 46% at 88% 96%, rgba(255, 116, 156, 0.1) 0%, rgba(255, 116, 156, 0) 72%),
+          var(--base);
+
+        --display: "Alice", "Iowan Old Style", Georgia, serif;
+        --body: "Nunito", "Segoe UI", system-ui, -apple-system, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+        --radius-sm: 8px;
+        --radius: 12px;
+        --radius-card: 16px;
+        --radius-lg: 22px;
+        --radius-pill: 999px;
+        --shadow-xs: 0 1px 2px rgba(42, 38, 48, 0.05);
+        --shadow-sm: 0 2px 6px color-mix(in oklab, var(--primary) 30%, transparent);
+        --glow:
+          0 0 0 1px color-mix(in oklab, var(--primary) 30%, transparent),
+          0 6px 22px color-mix(in oklab, var(--primary) 28%, transparent),
+          0 10px 34px color-mix(in oklab, var(--harmony-left) 40%, transparent);
+        --focus-outline: 1.5px dashed color-mix(in oklab, var(--primary) 60%, white);
+        --focus-offset: 3px;
+        --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+        --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --dur-fast: 140ms;
+        --dur-base: 220ms;
+
+        /* Code colors (Spica code theme, mapped to rangi's cssVariables theme) */
+        --shj-fg: #2a2630;
+        --shj-kwd: #7e5ba8;
+        --shj-func: #904061;
+        --shj-class: #904061;
+        --shj-str: #45688b;
+        --shj-num: #5360aa;
+        --shj-bool: #5360aa;
+        --shj-type: #904061;
+        --shj-cmnt: #585563;
+        --shj-oper: #585563;
+        --shj-bracket: #585563;
       }
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --bg: #121214;
-          --fg: #ececf0;
-          --muted: #9a9aa5;
-          --border: #2a2a30;
-          --code-bg: #1a1a1c;
-          --accent: #7aa7ff;
-          --banner-bg: #2d2410;
-          --banner-fg: #f3d98b;
-          --banner-border: #4d3d15;
-        }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        --primary: oklch(0.78 0.15 350);
+        --primary-cta-deep: oklch(0.73 0.15 350);
+        --on-primary: oklch(0.21 0.034 264.665);
+        --primary-soft: oklch(0.29 0.045 350);
+        --primary-line: oklch(0.4 0.085 350);
+        --primary-deep: oklch(0.8 0.13 355);
+        --harmony-center-deep: oklch(0.8671 0.0568 273.01);
+        --ink: oklch(0.94 0.012 285);
+        --ink-soft: oklch(0.8 0.022 278);
+        --ink-muted: oklch(0.7 0.025 278);
+        --base: oklch(0.21 0.024 285);
+        --surface: oklch(0.25 0.028 295);
+        --surface-2: oklch(0.295 0.03 300);
+        --border: oklch(0.33 0.028 300);
+        --border-strong: oklch(0.4 0.032 300);
+        --warning-soft: oklch(0.29 0.035 82);
+        --warning-deep: oklch(0.8521 0.1164 82.04);
+        --shadow-xs: 0 1px 2px rgba(12, 9, 16, 0.2);
+        --wash-pink: oklch(0.46 0.11 350);
+        --wash-blue: oklch(0.46 0.11 248);
+        --wash-periwinkle: oklch(0.46 0.11 274);
+        --wash-lavender: oklch(0.46 0.11 308);
+        --surface-wash:
+          radial-gradient(72.5% 62.5% at 2% 0%, color-mix(in oklab, var(--wash-pink) 20%, transparent), transparent 100%),
+          radial-gradient(65% 57.5% at 100% 6%, color-mix(in oklab, var(--wash-blue) 24%, transparent), transparent 100%),
+          radial-gradient(75% 68.75% at 94% 100%, color-mix(in oklab, var(--wash-lavender) 26%, transparent), transparent 100%),
+          radial-gradient(62.5% 57.5% at 4% 96%, color-mix(in oklab, var(--wash-periwinkle) 21%, transparent), transparent 100%),
+          var(--base);
+        --surface-wash-iris:
+          radial-gradient(75% 67.5% at 98% 2%, color-mix(in oklab, var(--wash-lavender) 28%, transparent), transparent 100%),
+          radial-gradient(70% 62.5% at 2% 98%, color-mix(in oklab, var(--wash-lavender) 24%, transparent), transparent 100%),
+          radial-gradient(62.5% 57.5% at 88% 96%, color-mix(in oklab, var(--wash-pink) 14%, transparent), transparent 100%),
+          var(--base);
+
+        --shj-fg: #edeafb;
+        --shj-kwd: #cfb4e8;
+        --shj-func: #f6bcd6;
+        --shj-class: #f6bcd6;
+        --shj-str: #a8cdf0;
+        --shj-num: #c9d2f2;
+        --shj-bool: #c9d2f2;
+        --shj-type: #f6bcd6;
+        --shj-cmnt: #a7aedc;
+        --shj-oper: #a7aedc;
+        --shj-bracket: #a7aedc;
       }
 
       * {
         box-sizing: border-box;
       }
+      html {
+        background: var(--base);
+      }
       body {
         margin: 0;
-        background: var(--bg);
-        color: var(--fg);
-        font:
-          16px/1.65 system-ui,
-          -apple-system,
-          "Segoe UI",
-          Roboto,
-          sans-serif;
+        min-height: 100vh;
+        background: var(--surface-wash);
+        background-attachment: fixed;
+        color: var(--ink);
+        font: 16px/1.6 var(--body);
       }
       a {
-        color: var(--accent);
+        color: var(--primary-deep);
+        text-underline-offset: 3px;
+        text-decoration-thickness: 1px;
+      }
+      a:hover {
+        text-decoration-thickness: 2px;
+      }
+      :focus-visible {
+        outline: var(--focus-outline);
+        outline-offset: var(--focus-offset);
+        border-radius: var(--radius-sm);
       }
 
+      /* Proposal banner */
       .banner {
         position: sticky;
         top: 0;
         z-index: 1;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 4px 10px;
         padding: 10px 16px;
-        background: var(--banner-bg);
-        color: var(--banner-fg);
-        border-bottom: 1px solid var(--banner-border);
-        text-align: center;
+        background: var(--warning-soft);
+        border-bottom: 1px solid var(--warning);
+        color: var(--warning-deep);
         font-size: 14px;
+        text-align: center;
+      }
+      .banner .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 3px 11px;
+        border-radius: var(--radius-pill);
+        background: var(--base);
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+      .banner .badge::before {
+        content: "";
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--warning);
       }
       .banner a {
         color: inherit;
+        font-weight: 700;
       }
 
       main {
-        max-width: 760px;
+        max-width: 720px;
         margin: 0 auto;
-        padding: 56px 16px 80px;
-      }
-      header h1 {
-        margin: 0 0 8px;
-        font-size: clamp(32px, 6vw, 44px);
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-      }
-      header .tagline {
-        margin: 0;
-        font-size: 19px;
-        color: var(--muted);
-      }
-      .links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px 20px;
-        margin-top: 20px;
-        font-size: 15px;
+        padding: 72px 16px 96px;
       }
 
+      /* Hero */
+      header {
+        position: relative;
+      }
+      .sky {
+        position: absolute;
+        top: -36px;
+        right: -8px;
+        width: 220px;
+        height: auto;
+        pointer-events: none;
+      }
+      .sky .line {
+        stroke: var(--harmony-center-deep);
+        stroke-opacity: 0.35;
+        stroke-width: 1;
+        stroke-dasharray: 3 4;
+        fill: none;
+      }
+      .sky .arc {
+        stroke: var(--harmony-center-deep);
+        stroke-opacity: 0.16;
+        fill: none;
+      }
+      .sky .star {
+        fill: var(--harmony-center-deep);
+        fill-opacity: 0.55;
+      }
+      .sky .spica {
+        fill: var(--primary);
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: spica-twinkle 3.2s var(--ease-out) infinite;
+      }
+      .sky .halo {
+        fill: var(--bloom);
+        fill-opacity: 0.35;
+      }
+      @keyframes spica-twinkle {
+        0%,
+        100% {
+          opacity: 0.6;
+          transform: scale(0.85);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+      }
+      .eyebrow {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--primary-deep);
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: var(--display);
+        font-weight: 400;
+        letter-spacing: -0.012em;
+        color: var(--ink);
+      }
+      h1 {
+        position: relative;
+        margin: 0 0 12px;
+        font-size: clamp(40px, 8vw, 56px);
+        line-height: 1.05;
+      }
+      .lead {
+        position: relative;
+        max-width: 560px;
+        margin: 0;
+        font-size: 20px;
+        color: var(--ink-soft);
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+      .button {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: var(--radius);
+        font-weight: 700;
+        font-size: 15px;
+        text-decoration: none;
+        transition:
+          transform var(--dur-base) var(--ease-spring),
+          box-shadow var(--dur-base) var(--ease-out),
+          background var(--dur-fast) var(--ease-out);
+      }
+      .button svg {
+        width: 18px;
+        height: 18px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.75;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .button:active {
+        transform: scale(0.98);
+      }
+      .button.primary {
+        background: var(--primary);
+        color: var(--on-primary);
+        box-shadow: var(--shadow-sm);
+      }
+      .button.primary:hover {
+        background: var(--primary-cta-deep);
+        box-shadow: var(--glow);
+      }
+      .button.secondary {
+        background: var(--primary-soft);
+        color: var(--primary-deep);
+        box-shadow: inset 0 0 0 1px var(--primary-line);
+      }
+      .button.secondary:hover {
+        background: color-mix(in oklab, var(--primary-soft) 70%, var(--primary-line));
+      }
+
+      /* Content */
       section {
-        margin-top: 56px;
+        margin-top: 80px;
       }
       h2 {
         margin: 0 0 12px;
-        font-size: 24px;
-        letter-spacing: -0.01em;
+        font-size: 32px;
+        line-height: 1.2;
       }
       h3 {
-        margin: 28px 0 8px;
-        font-size: 17px;
+        margin: 0 0 10px;
+        font-size: 24px;
+        line-height: 1.25;
       }
       p {
         margin: 0 0 12px;
       }
-      .step {
-        display: inline-block;
-        margin-bottom: 4px;
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        color: var(--muted);
+      .role {
+        margin-top: 40px;
       }
-
+      .role:first-of-type {
+        margin-top: 24px;
+      }
       code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        font-size: 0.9em;
+        font-family: var(--mono);
+        font-variant-ligatures: none;
       }
       :not(pre) > code {
-        padding: 1px 5px;
-        border-radius: 4px;
-        background: var(--code-bg);
-        border: 1px solid var(--border);
+        padding: 1px 6px;
+        border-radius: var(--radius-sm);
+        background: var(--surface-2);
+        font-size: 0.86em;
       }
-      pre {
-        margin: 12px 0 0;
-        padding: 16px 18px;
+      h3 code {
+        font-size: 0.8em;
+      }
+
+      /* Code block: outer frame + inner iris-wash surface */
+      .code {
+        margin: 16px 0;
+        padding: 6px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-xs);
+      }
+      .code figcaption {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 2px 6px 6px;
+      }
+      .code .file {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--ink-muted);
+      }
+      .code .lang {
+        padding: 2px 7px;
+        border-radius: var(--radius-sm);
+        background: color-mix(in oklab, var(--gold) 14%, transparent);
+        color: var(--gold);
+        font-family: var(--mono);
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+      .code pre {
+        margin: 0;
+        padding: 14px 16px;
         overflow-x: auto;
-        background: var(--code-bg);
+        background: var(--surface-wash-iris);
         border: 1px solid var(--border);
-        border-radius: 10px;
-        font-size: 14px;
-        line-height: 1.6;
-      }
-      pre code {
-        font-size: inherit;
+        border-radius: var(--radius-card);
+        color: var(--shj-fg);
+        font-size: 13.5px;
+        line-height: 1.55;
+        tab-size: 2;
       }
 
       footer {
-        margin-top: 72px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 10px;
+        margin-top: 96px;
         padding-top: 20px;
-        border-top: 1px solid var(--border);
+        border-top: 1px solid var(--border-strong);
         font-size: 14px;
-        color: var(--muted);
+        color: var(--ink-soft);
+      }
+      footer .sparkle {
+        width: 12px;
+        height: 12px;
+        fill: var(--primary);
+      }
+
+      @media (max-width: 640px) {
+        main {
+          padding-top: 48px;
+        }
+        .sky {
+          width: 150px;
+          top: -28px;
+          opacity: 0.7;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
       }
     </style>
   </head>
   <body>
     <div class="banner" role="note">
-      🚧 <strong>Proposal, not final.</strong> This is an early draft to share
-      the idea. Names, types and APIs may change.
-      <a href="https://github.com/standard-servers/standard-context/issues">Feedback welcome</a>.
+      <span class="badge">Draft proposal</span>
+      <span>
+        Nothing here's final yet. Names, types and APIs may still change.
+        <a href="https://github.com/standard-servers/standard-context/issues">Tell us what you think</a>
+      </span>
     </div>
 
     <main>
       <header>
-        <h1>Standard Servers</h1>
-        <p class="tagline">
-          Write server utilities and middleware once. Run them on any
+        <svg class="sky" viewBox="0 0 220 160" aria-hidden="true">
+          <path class="arc" d="M10 150 A150 150 0 0 1 210 30" />
+          <path class="arc" d="M40 158 A120 120 0 0 1 212 70" />
+          <polyline class="line" points="24,40 70,58 112,46 150,82 196,64" />
+          <polyline class="line" points="112,46 104,104 150,82" />
+          <circle class="star" cx="24" cy="40" r="2" />
+          <circle class="star" cx="70" cy="58" r="2.5" />
+          <circle class="star" cx="112" cy="46" r="2" />
+          <circle class="star" cx="196" cy="64" r="2" />
+          <circle class="star" cx="104" cy="104" r="2" />
+          <circle class="halo" cx="150" cy="82" r="14" />
+          <path class="spica" d="M150 70c1.2 9 1.2 9 12 12-10.8 3-10.8 3-12 12-1.2-9-1.2-9-12-12 10.8-3 10.8-3 12-12Z" />
+        </svg>
+        <span class="eyebrow">Standard Servers</span>
+        <h1>One middleware, every framework</h1>
+        <p class="lead">
+          Write server utilities and middleware once, then run them on any
           Fetch-based framework.
         </p>
-        <div class="links">
-          <a href="https://github.com/standard-servers/standard-context">standard-context</a>
-          <a href="https://github.com/standard-servers/standard-middleware">standard-middleware</a>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/standard-servers/standard-context">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg>
+            standard-context
+          </a>
+          <a class="button secondary" href="https://github.com/standard-servers/standard-middleware">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg>
+            standard-middleware
+          </a>
         </div>
       </header>
 
       <section>
         <h2>The problem</h2>
         <p>
-          Modern JavaScript server frameworks have all settled on the Fetch API:
-          a <code>Request</code> comes in and a <code>Response</code> goes out.
-          But each one wraps the request in its own <code>context</code> or
-          <code>event</code> object, so a utility or middleware written for one
-          framework doesn't work in the others.
+          Modern JavaScript server frameworks all speak the Fetch API: a
+          <code>Request</code> comes in, a <code>Response</code> goes out. But
+          each one wraps it in its own <code>context</code> or
+          <code>event</code>, so a utility written for one framework doesn't
+          work in the others.
         </p>
-        <pre><code data-lang="ts">// H3
+        <figure class="code">
+          <figcaption><span class="file">logger.ts</span><span class="lang">ts</span></figcaption>
+          <pre><code data-lang="ts">// H3
 app.use((event) => console.log(event.req.method, event.url.pathname));
 
 // Hono
@@ -197,8 +530,9 @@ export const handle = ({ event, resolve }) => {
   console.log(event.request.method, event.url.pathname);
   return resolve(event);
 };</code></pre>
-        <p style="margin-top: 12px">
-          The same logger, written three times. Multiply that by every library
+        </figure>
+        <p>
+          Same logger, written three times. Now multiply that by every library
           and every framework.
         </p>
       </section>
@@ -207,22 +541,27 @@ export const handle = ({ event, resolve }) => {
         <h2>The idea</h2>
         <p>
           Inspired by <a href="https://standardschema.dev">Standard Schema</a>,
-          frameworks keep their own context and add one extra property to it:
-          <code>~standard</code>. Library authors read the request and shape the
-          response through it, without knowing which framework they run in.
-          Frameworks can adopt it without breaking changes.
+          frameworks keep their own context and add one property to it:
+          <code>~standard</code>.
+        </p>
+        <p>
+          Libraries read the request and shape the response through it, without
+          caring which framework they're running in. Frameworks can adopt it
+          without breaking anything.
         </p>
       </section>
 
       <section>
-        <span class="step">Proposal 1</span>
+        <span class="eyebrow">Proposal 1</span>
         <h2>StandardContext</h2>
         <p>
           A standard way to read the incoming <code>Request</code> and prepare
           the outgoing <code>Response</code>. Frameworks can also expose
           runtime-specific data and <code>waitUntil</code>.
         </p>
-        <pre><code data-lang="ts">export type StandardContext&lt;C = {}, R = unknown, W = unknown&gt; = C &amp; {
+        <figure class="code">
+          <figcaption><span class="file">standard-context</span><span class="lang">ts</span></figcaption>
+          <pre><code data-lang="ts">export type StandardContext&lt;C = {}, R = unknown, W = unknown&gt; = C &amp; {
   readonly "~standard": StandardContext.Props&lt;R, W&gt;;
 };
 
@@ -246,20 +585,22 @@ export declare namespace StandardContext {
     headers?: Headers;
   }
 }</code></pre>
+        </figure>
       </section>
 
       <section>
-        <span class="step">Proposal 2</span>
+        <span class="eyebrow">Proposal 2</span>
         <h2>StandardMiddleware</h2>
         <p>
-          Built on top of <code>StandardContext</code>: a middleware is an async
+          Built on top of <code>StandardContext</code>, a middleware is an async
           function of <code>(context, next)</code>. Frameworks compose a stack
-          of them like
-          <a href="https://github.com/koajs/compose">koa-compose</a>. Code
-          before <code>await next()</code> runs on the way in, code after runs
-          on the way out.
+          of them like <a href="https://github.com/koajs/compose">koa-compose</a>:
+          code before <code>await next()</code> runs on the way in, code after
+          it runs on the way out.
         </p>
-        <pre><code data-lang="ts">export type StandardNext&lt;Args extends unknown[] = [], T = unknown&gt; = (
+        <figure class="code">
+          <figcaption><span class="file">standard-middleware</span><span class="lang">ts</span></figcaption>
+          <pre><code data-lang="ts">export type StandardNext&lt;Args extends unknown[] = [], T = unknown&gt; = (
   ...args: Args
 ) =&gt; Promise&lt;T&gt;;
 
@@ -268,14 +609,18 @@ export type StandardMiddleware&lt;
   N extends StandardNext = StandardNext,
   R = void,
 &gt; = (context: C, next: N) =&gt; Promise&lt;R&gt;;</code></pre>
+        </figure>
       </section>
 
       <section>
         <h2>How it fits together</h2>
 
-        <span class="step">Library author</span>
-        <h3>Write middleware once</h3>
-        <pre><code data-lang="ts">import type { StandardMiddleware } from "standard-middleware";
+        <div class="role">
+          <span class="eyebrow">Library author</span>
+          <h3>Write middleware once</h3>
+          <figure class="code">
+            <figcaption><span class="file">middleware.ts</span><span class="lang">ts</span></figcaption>
+            <pre><code data-lang="ts">import type { StandardMiddleware } from "standard-middleware";
 
 export const logger: StandardMiddleware = async (c, next) =&gt; {
   await next();
@@ -288,24 +633,26 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
   c["~standard"].res.headers?.set("x-vendor", c["~standard"].vendor);
   await next();
 };</code></pre>
+          </figure>
+        </div>
 
-        <span class="step" style="margin-top: 28px">Framework author</span>
-        <h3>Expose <code>~standard</code> on the context</h3>
-        <p>
-          In H3 the context already matches the shape, so it maps almost one to
-          one:
-        </p>
-        <pre><code data-lang="ts">event["~standard"] = {
+        <div class="role">
+          <span class="eyebrow">Framework author</span>
+          <h3>Expose <code>~standard</code> on the context</h3>
+          <p>H3's context already has the right shape, so it maps almost one to one:</p>
+          <figure class="code">
+            <figcaption><span class="file">h3</span><span class="lang">ts</span></figcaption>
+            <pre><code data-lang="ts">event["~standard"] = {
   vendor: "h3",
   req: event.req,
   res: event.res,
   waitUntil: event.waitUntil,
 };</code></pre>
-        <p style="margin-top: 12px">
-          Other frameworks can bridge their own APIs with getters and setters.
-          Here is Hono:
-        </p>
-        <pre><code data-lang="ts">c["~standard"] = {
+          </figure>
+          <p>Other frameworks can bridge their own APIs with getters and setters. Here's Hono:</p>
+          <figure class="code">
+            <figcaption><span class="file">hono</span><span class="lang">ts</span></figcaption>
+            <pre><code data-lang="ts">c["~standard"] = {
   vendor: "hono",
   req: c.req.raw,
   res: {
@@ -316,40 +663,49 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
     headers: c.res.headers,
   },
 };</code></pre>
+          </figure>
+        </div>
 
-        <span class="step" style="margin-top: 28px">App developer</span>
-        <h3>Use it in any framework</h3>
-        <pre><code data-lang="ts">import { logger, addVendorHeader } from "some-standard-library";
+        <div class="role">
+          <span class="eyebrow">App developer</span>
+          <h3>Use it in any framework</h3>
+          <figure class="code">
+            <figcaption><span class="file">app.ts</span><span class="lang">ts</span></figcaption>
+            <pre><code data-lang="ts">import { logger, addVendorHeader } from "some-standard-library";
 
 app.use(logger, addVendorHeader);</code></pre>
+          </figure>
+        </div>
       </section>
 
       <section>
         <h2>Get involved</h2>
         <p>
-          This is a starting point for discussion between framework and library
-          authors. Read the full proposals, try the
+          This is a starting point for a conversation between framework and
+          library authors. Read the proposals, try the
           <a href="https://github.com/standard-servers/standard-middleware/tree/main/src/example">examples</a>
-          (H3, Hono and Remix), and share your thoughts in the repositories.
+          for H3, Hono and Remix, and tell us what you think.
         </p>
-        <div class="links">
-          <a href="https://github.com/standard-servers/standard-context">github.com/standard-servers/standard-context</a>
-          <a href="https://github.com/standard-servers/standard-middleware">github.com/standard-servers/standard-middleware</a>
-        </div>
       </section>
 
       <footer>
-        Proposal draft · Syntax highlighting by
-        <a href="https://github.com/pi0/rangi">rangi</a>
+        <svg class="sparkle" viewBox="-10 -10 20 20" aria-hidden="true"><path d="M0-9C1-1 1-1 9 0 1 1 1 1 0 9-1 1-1 1-9 0-1-1-1-1 0-9Z" /></svg>
+        <span>Draft proposal</span>
+        <span aria-hidden="true">·</span>
+        <a href="https://github.com/standard-servers">github.com/standard-servers</a>
+        <span aria-hidden="true">·</span>
+        <span>Highlighting by <a href="https://github.com/pi0/rangi">rangi</a></span>
       </footer>
     </main>
 
     <script type="module">
       import { highlightText } from "https://cdn.jsdelivr.net/npm/rangi@2.2.0/dist/index.mjs";
+      import { cssVariables } from "https://cdn.jsdelivr.net/npm/rangi@2.2.0/dist/themes/index.mjs";
 
       for (const el of document.querySelectorAll("pre > code[data-lang]")) {
         el.innerHTML = highlightText(el.textContent, {
           lang: el.dataset.lang,
+          theme: cssVariables,
           lineNumbers: false,
         });
       }
