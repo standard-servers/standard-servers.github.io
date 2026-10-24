@@ -549,7 +549,12 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
   waitUntil: event.waitUntil,
 };</code></pre>
           </figure>
-          <p>Other frameworks can bridge their own APIs with getters and setters. Here's Hono:</p>
+          <p>
+            Other frameworks can bridge their own APIs with getters and setters.
+            In Hono, <code>c.res</code> is a read-only <code>Response</code> that's
+            replaced once the handler returns, so each property reads and writes
+            the current one:
+          </p>
           <figure class="code">
             <figcaption><span class="file">hono</span><span class="lang">ts</span></figcaption>
             <pre><code data-lang="ts">c["~standard"] = {
@@ -557,12 +562,31 @@ export const addVendorHeader: StandardMiddleware = async (c, next) =&gt; {
   req: c.req.raw,
   res: {
     get body() { return c.res.body; },
-    set body(b) { c.body(b); },
+    set body(b) { c.res = new Response(b, c.res); },
     get status() { return c.res.status; },
-    set status(s) { c.status(s); },
-    headers: c.res.headers,
+    set status(s) { c.res = new Response(c.res.body, { status: s, headers: c.res.headers }); },
+    get headers() { return c.res.headers; },
   },
 };</code></pre>
+          </figure>
+          <p>
+            Elysia can add it to every request with <code>derive</code>. Its
+            response headers are a plain object and the body is the handler's
+            return value, so <code>headers</code> and <code>body</code> would
+            need support inside Elysia itself:
+          </p>
+          <figure class="code">
+            <figcaption><span class="file">elysia</span><span class="lang">ts</span></figcaption>
+            <pre><code data-lang="ts">app.derive(({ request, set }) => ({
+  "~standard": {
+    vendor: "elysia",
+    req: request,
+    res: {
+      get status() { return typeof set.status === "number" ? set.status : undefined; },
+      set status(s) { set.status = s; },
+    },
+  },
+}));</code></pre>
           </figure>
         </div>
 
